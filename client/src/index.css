@@ -1,0 +1,80 @@
+@import '@fontsource-variable/inter';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ------------------------------------------------------------------
+   Design tokens. Colours are "R G B" channels so Tailwind can add alpha.
+   Palette: deep midnight navy, indigo/violet accents, cool neutrals.
+   ------------------------------------------------------------------ */
+:root {
+  color-scheme: light;
+  --canvas: 244 245 251;  --surface: 255 255 255;  --surface-2: 247 248 253;  --surface-3: 237 239 249;
+  --ink: 13 17 43;        --muted: 98 105 138;     --line: 227 230 243;       --line-strong: 205 210 232;
+  --brand-50: 240 241 255; --brand-100: 228 230 255; --brand-200: 205 209 254; --brand-300: 165 171 252;
+  --brand-400: 129 133 247; --brand-500: 99 102 241; --brand-600: 79 70 229;  --brand-700: 62 53 190;
+  --primary: 79 70 229;   --primary-hover: 67 56 202;
+  --accent: 79 70 229;    --accent-2: 139 92 246;
+  --ok: 21 128 61;        --warn: 180 83 9;        --bad: 185 28 28;
+  --shadow-card: 0 1px 2px rgb(13 17 43 / .04), 0 4px 16px -4px rgb(13 17 43 / .06);
+  --shadow-pop: 0 12px 40px -8px rgb(13 17 43 / .22), 0 2px 6px rgb(13 17 43 / .06);
+  --shadow-glow: 0 8px 30px -6px rgb(79 70 229 / .45);
+  --glass: 255 255 255 / .72;
+}
+.dark {
+  color-scheme: dark;
+  --canvas: 7 9 24;       --surface: 14 18 42;     --surface-2: 19 24 54;     --surface-3: 28 34 72;
+  --ink: 236 238 252;     --muted: 148 156 194;    --line: 36 42 82;          --line-strong: 52 60 108;
+  --brand-50: 30 29 76;   --brand-100: 42 40 104;  --brand-200: 62 60 140;    --brand-300: 112 116 220;
+  --brand-400: 140 146 250; --brand-500: 129 140 248; --brand-600: 150 160 252; --brand-700: 180 188 255;
+  --primary: 99 102 241;  --primary-hover: 118 121 248;
+  --accent: 129 140 248;  --accent-2: 167 139 250;
+  --ok: 74 222 128;       --warn: 251 191 36;      --bad: 248 113 113;
+  --shadow-card: 0 1px 2px rgb(0 0 0 / .3), 0 4px 18px -4px rgb(0 0 0 / .4);
+  --shadow-pop: 0 16px 48px -8px rgb(0 0 0 / .65), 0 0 0 1px rgb(255 255 255 / .04);
+  --shadow-glow: 0 8px 36px -6px rgb(99 102 241 / .55);
+  --glass: 14 18 42 / .72;
+}
+/* Each role gets its own accent pair while the rest of the language stays identical. */
+[data-role='ADMIN']   { --accent: 79 70 229;  --accent-2: 139 92 246; }
+[data-role='FACULTY'] { --accent: 37 99 235;  --accent-2: 99 102 241; }
+[data-role='STUDENT'] { --accent: 124 58 237; --accent-2: 192 132 252; }
+.dark[data-role='ADMIN'], .dark [data-role='ADMIN']     { --accent: 129 140 248; --accent-2: 167 139 250; }
+.dark[data-role='FACULTY'], .dark [data-role='FACULTY'] { --accent: 96 165 250;  --accent-2: 129 140 248; }
+.dark[data-role='STUDENT'], .dark [data-role='STUDENT'] { --accent: 167 139 250; --accent-2: 232 121 249; }
+
+@layer base {
+  html { font-family: 'Inter Variable', system-ui, sans-serif; color: rgb(var(--ink)); background: rgb(var(--canvas));
+    -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; font-feature-settings: 'cv11', 'ss01', 'calt'; }
+  body { min-height: 100vh; transition: background-color .25s ease, color .25s ease; }
+  h1, h2, h3, h4 { letter-spacing: -0.022em; font-feature-settings: 'cv11', 'ss01', 'calt'; }
+  :focus-visible { outline: 2px solid rgb(var(--brand-500)); outline-offset: 2px; border-radius: 8px; }
+  ::selection { background: rgb(var(--brand-500) / .28); }
+  input, select, textarea { color-scheme: inherit; }
+  ::-webkit-scrollbar { width: 10px; height: 10px; }
+  ::-webkit-scrollbar-thumb { background: rgb(var(--line-strong)); border-radius: 999px; border: 3px solid transparent; background-clip: content-box; }
+  ::-webkit-scrollbar-track { background: transparent; }
+}
+
+@layer components {
+  /* layered surface: translucent glass for floating chrome (navbar, popovers) */
+  .glass { background: rgb(var(--glass)); backdrop-filter: blur(16px) saturate(1.4); -webkit-backdrop-filter: blur(16px) saturate(1.4); }
+  .accent-gradient { background-image: linear-gradient(135deg, rgb(var(--accent)), rgb(var(--accent-2))); }
+  .text-accent-gradient { background-image: linear-gradient(120deg, rgb(var(--accent)), rgb(var(--accent-2))); -webkit-background-clip: text; background-clip: text; color: transparent; }
+  .hairline { box-shadow: inset 0 0 0 1px rgb(var(--line)); }
+  /* soft dotted grid for hero / banner backgrounds */
+  .bg-dots { background-image: radial-gradient(rgb(255 255 255 / .14) 1px, transparent 1px); background-size: 22px 22px; }
+  .bg-grid-faint { background-image: linear-gradient(rgb(var(--line) / .55) 1px, transparent 1px), linear-gradient(90deg, rgb(var(--line) / .55) 1px, transparent 1px); background-size: 44px 44px; }
+  .tnum { font-variant-numeric: tabular-nums; }
+
+  /* skeleton: soft base + a moving highlight (replaces the plain pulse) */
+  .skeleton { position: relative; overflow: hidden; border-radius: 8px; background: rgb(var(--surface-3)); }
+  .skeleton::after { content: ''; position: absolute; inset: 0; transform: translateX(-100%);
+    background: linear-gradient(90deg, transparent, rgb(var(--surface) / .7), transparent); animation: shimmer 1.4s infinite; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
+}
+/* same switch, but chosen by the user in Preferences */
+.reduce-motion *, .reduce-motion *::before, .reduce-motion *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; scroll-behavior: auto !important; }
